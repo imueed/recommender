@@ -25,7 +25,6 @@ def pearson_correlation(u1_ratings, u1_rmean, u2_ratings, u2_rmean):
     
     denominator = u1_diff_sqrt * u2_diff_sqrt
     
-    # TODO: Handle zero division
     return numerator / denominator
 
 def get_similar_movies(uid1, uid2):
@@ -71,6 +70,7 @@ for uid1 in user_ids:
         u2_data = u2_data[u2_filter]
         u2_ratings = u2_data[:,2]
         
+        # NOTE: Some matrix elements might be NaN if sim_movies = []
         sim_matrix[uid1, uid2] = pearson_correlation(u1_ratings, user_means[uid1],
                                                      u2_ratings, user_means[uid2])
         
