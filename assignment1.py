@@ -27,9 +27,21 @@ def pearson_correlation(u1_ratings, u1_rmean, u2_ratings, u2_rmean):
 # Calculate rating prediction for unseen movie for specific user
 # Params : User-id and movie-id of unseen movie
 # Return : Rating prediction for unseen movie
-def pred_function(uid, itemid):
+def predict_movie_rating(uid, item_id):
+    # Get the list of users who have rated the movie itemid
+    rated_users = get_rated_users(item_id)
+    rated_user_ids = rated_users[:,0].astype('int16')
+    rated_user_ratings = rated_users[:,1]
+    # Get the mean ratings of rated_users
+    rated_user_means = user_means[rated_user_ids]
     
-    return
+    # Calculate rating prediction
+    # @ == dot product
+    mean_diff = rated_user_ratings - rated_user_means
+    sim_vector = sim_matrix[uid, rated_user_ids]
+    numerator = sim_vector @ mean_diff
+    
+    return user_means[uid] + (numerator / sim_vector.sum())
 
 # Get users who have rated the movie item_id.
 # Params : ID-value of movie
@@ -104,11 +116,3 @@ print("Run time = {} min".format(round((time.time() - start) / 60.0, 1)))
 # Copy upper triangle to lower triangle
 ltr_idx = np.tril_indices(sim_matrix.shape[0], -1)
 sim_matrix[ltr_idx] = sim_matrix.T[ltr_idx]
-
-
-
-
-
-
-
-
