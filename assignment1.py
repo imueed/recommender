@@ -1,6 +1,9 @@
 import numpy as np
 import time
 
+# Pearson-correlation score
+# Params : Two user-id's and corresponding mean rating values
+# Return : Pearson correlation, e.g similarity score
 def pearson_correlation(u1_ratings, u1_rmean, u2_ratings, u2_rmean):
     # Calculate numerator of Pearson correlation formula.
     # Vector algebra is used.
@@ -21,12 +24,32 @@ def pearson_correlation(u1_ratings, u1_rmean, u2_ratings, u2_rmean):
     
     return numerator / denominator
 
+# Calculate rating prediction for unseen movie for specific user
+# Params : User-id and movie-id of unseen movie
+# Return : Rating prediction for unseen movie
+def pred_function(uid, itemid):
+    
+    return
+
+# Get users who have rated the movie item_id.
+# Params : ID-value of movie
+# Return : List of user-id's and respective rating scores
+def get_rated_users(item_id):
+    data = ratings[ratings[:,1]==item_id]
+    return np.delete(data, 1, axis=1)
+
+# Get movies watched by both users
+# Params : ID-values for both users
+# Return : List of movie-id's
 def get_similar_movies(uid1, uid2):
     user1_movies = ratings[np.where(ratings[:,0] == uid1)][:,1]
     user2_movies = ratings[np.where(ratings[:,0] == uid2)][:,1]
     
     return np.intersect1d(user1_movies, user2_movies)
 
+# Get rating data for specific user
+# Params : User-id and attribute indexes
+# Return : User-id-specific data
 def get_userdata(uid, first_attr=0, last_attr=3):
     data = ratings[np.where(ratings[:,0] == uid)][:, first_attr:last_attr]
     if (last_attr - first_attr) == 1:
@@ -81,3 +104,11 @@ print("Run time = {} min".format(round((time.time() - start) / 60.0, 1)))
 # Copy upper triangle to lower triangle
 ltr_idx = np.tril_indices(sim_matrix.shape[0], -1)
 sim_matrix[ltr_idx] = sim_matrix.T[ltr_idx]
+
+
+
+
+
+
+
+
