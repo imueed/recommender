@@ -68,7 +68,8 @@ def get_userdata(uid, first_attr=0, last_attr=3):
         data = data.T
     return data
 
-root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+root = '/Users/mueed/Downloads/ml-latest-small/'
+#root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
 
 ratings = np.genfromtxt(root+'ratings.csv', delimiter=',')
 ratings = np.delete(ratings[1:], 3, axis=1)
@@ -116,3 +117,12 @@ print("Run time = {} min".format(round((time.time() - start) / 60.0, 1)))
 # Copy upper triangle to lower triangle
 ltr_idx = np.tril_indices(sim_matrix.shape[0], -1)
 sim_matrix[ltr_idx] = sim_matrix.T[ltr_idx]
+
+#%%
+def similar_users(userid):
+    indices = (-sim_matrix[userid]).argsort()[:10]
+    indices.sort()
+    print(indices)
+    
+
+#%%
