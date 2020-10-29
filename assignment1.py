@@ -49,7 +49,8 @@ def get_userdata(uid, first_attr=0, last_attr=3):
         data = data.T
     return data
 
-root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+root = '/Users/mueed/Downloads/ml-latest-small/'
+#root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
 
 ratings = np.genfromtxt(root+'ratings.csv', delimiter=',')
 ratings = np.delete(ratings[1:], 3, axis=1)
@@ -111,17 +112,17 @@ ltr_idx = np.tril_indices(sim_matrix.shape[0], -1)
 sim_matrix[ltr_idx] = sim_matrix.T[ltr_idx]
 
 #%%
+def similar_users(userid, n=1):
+    indices = (-sim_matrix[userid]).argsort()[:n]
+    indices.sort()
+    return indices
+#%%
 """ Select a user from the dataset, and for this user, show the 10 most similar users """
 # Returns indecies of n largest elements ( Correct results )
 def get_n_largest2(arr, n=1):
     arr = np.argpartition( -arr, n)[:n]
     arr.sort()
     return arr
-
-def similar_users(userid, n=1):
-    indices = (-sim_matrix[userid]).argsort()[:n]
-    indices.sort()
-    return indices
 
 user_id = 1
 N = 5
@@ -278,18 +279,6 @@ def predict_movie_rating2(sim_vec, r_vec):
 uid=0
 u_unseen = get_unseen_movies(uid)[0]
 sim_vec, umr_vec, mids = predict_movie_rating2(uid, u_unseen)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
