@@ -2,8 +2,32 @@
 #%%
 import numpy as np
 import pandas as pd
-from numpy.linalg import norm
+
+root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+
+df_movies = pd.read_csv(root+'movies.csv', usecols=['movieId', 'title'],
+                        dtype={'movieId':'int32', 'title':'str'})
+
+df_ratings = pd.read_csv(root+'ratings.csv', usecols=['userId', 'movieId', 'rating'],
+                         dtype={'userId':'int32', 'movieId':'int32', 'rating':'float32'})
+
+#%%
 from scipy.sparse import csr_matrix
+# Pivot ratings into movie features
+df_movie_features = df_ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
+# Create sparse feature matrix out of dataframe
+mat_movie_features = csr_matrix(df_movie_features.values)
+
+#%%
+# Get all seen and unseen movies for user
+user_id = 2
+user_unrated_movies_idx = np.where(mat_movie_features.getrow(user_id).toarray().ravel()==0)[0]
+user_rated_movies_idx = np.where(mat_movie_features.getrow(user_id).toarray().ravel()!=0)[0]
+user_rated_movies_r = mat_movie_features.getrow(user_id).toarray().ravel()[user_rated_movies_idx]
+
+#%%
+# Item based collaborative filtering
+from numpy.linalg import norm
 
 # Cosine difference (angle) between two vectors sim(a, b)
 # Larger is better
@@ -13,7 +37,6 @@ from scipy.sparse import csr_matrix
 def cosine_diff(a, b):
     return (a@b) / (norm(a)*norm(b))
 
-# Return a vector of similarity values
 def get_sim(p, rated_item_u):
     p_vec = mat_movie_features.getcol(p).toarray().ravel()
     
@@ -25,36 +48,10 @@ def get_sim(p, rated_item_u):
         
     return np.array(similarity_values)
 
-# Predict a rating using vector algebra
 def calc_pred(sim_vec, r_vec):
     num = np.inner(sim_vec, r_vec)
     denom = np.sum(sim_vec)
     return num / denom
-
-# Get index values of n largest elements in the vector
-def get_n_largest_idx(vec, n=1):
-    idxs = (-vec).argsort()[:n]
-    return idxs
-
-
-root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
-
-df_movies = pd.read_csv(root+'movies.csv', usecols=['movieId', 'title'],
-                        dtype={'movieId':'int32', 'title':'str'})
-
-df_ratings = pd.read_csv(root+'ratings.csv', usecols=['userId', 'movieId', 'rating'],
-                         dtype={'userId':'int32', 'movieId':'int32', 'rating':'float32'})
-
-# Pivot ratings into movie features
-df_movie_features = df_ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
-# Create sparse feature matrix out of dataframe
-mat_movie_features = csr_matrix(df_movie_features.values)
-
-# Get all seen and unseen movies for user
-user_id = 2
-user_unrated_movies_idx = np.where(mat_movie_features.getrow(user_id).toarray().ravel()==0)[0]
-user_rated_movies_idx = np.where(mat_movie_features.getrow(user_id).toarray().ravel()!=0)[0]
-user_rated_movies_r = mat_movie_features.getrow(user_id).toarray().ravel()[user_rated_movies_idx]
 
 # Loop over unrated movies
 unseen_movies_predictions = []
@@ -69,8 +66,15 @@ for p in user_unrated_movies_idx:
     n+=1
 
 unseen_movies_predictions = np.array(unseen_movies_predictions)
-
+#%%
 # Show the N most relevant movies for user.
+# Get index values of n largest elements in the vector
+def get_n_largest_idx(vec, n=1):
+    idxs = (-vec).argsort()[:n]
+    return idxs
+
+# user_unrated_movies_idx
+# unseen_movies_predictions
 N=20
 n_largest = get_n_largest_idx(unseen_movies_predictions,N)
 print('{} most relevant movies for user {}:'.format(N, user_id+1))
