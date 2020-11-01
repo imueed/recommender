@@ -3,7 +3,9 @@
 import numpy as np
 import pandas as pd
 
+# CHANGE DIRECTORY PATH HERE TO THE ASSIGNMENT FILES 
 root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+#root = '/Users/mueed/Documents/GitHub/recommender/ml-latest-small/'
 
 df_movies = pd.read_csv(root+'movies.csv', usecols=['movieId', 'title'],
                         dtype={'movieId':'int32', 'title':'str'})
@@ -18,7 +20,7 @@ df_movie_features = df_ratings.pivot(index='userId', columns='movieId', values='
 # Create sparse feature matrix out of dataframe
 mat_movie_features = csr_matrix(df_movie_features.values)
 
-#%%
+#%%  CHANGE THE USER_ID HERE TO FIND RATINGS FOR A DIFFERENT USER.
 # Get all seen and unseen movies for user
 user_id = 2
 user_unrated_movies_idx = np.where(mat_movie_features.getrow(user_id).toarray().ravel()==0)[0]
@@ -75,6 +77,7 @@ def get_n_largest_idx(vec, n=1):
 
 # user_unrated_movies_idx
 # unseen_movies_predictions
+# CHANGE THE 'N' HERE TO CHANGE THE NUMBER OF MOVIES
 N=20
 n_largest = get_n_largest_idx(unseen_movies_predictions,N)
 print('{} most relevant movies for user {}:'.format(N, user_id+1))

@@ -92,8 +92,9 @@ def calculate_sim_matrix(normalize=True):
     
     return sim_matrix, cases_matrix
 
-
-root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+# CHANGE DIRECTORY PATH HERE TO THE ASSIGNMENT FILES 
+#root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+root = '/Users/mueed/Documents/GitHub/recommender/ml-latest-small/'
 
 movies = pd.read_csv(root+'movies.csv', sep=',').values
 
@@ -127,6 +128,7 @@ def get_n_largest_idx(vec, n=1):
     idxs = (-vec).argsort()[:n]
     return idxs
 
+# CHANGE THE USER_ID AND N VALUE HERE.
 user_id = 0
 N = 10
 sim_users = get_n_largest_idx(sim_matrix[user_id,:],N)
@@ -205,6 +207,7 @@ def get_relevant_movies(uid, N=1):
     
     return np.concatenate((most_relevant_ids, most_relevant_scores)).reshape((-1,2), order='F')
 
+# CHANGE THE USER_ID AND N VALUE HERE.
 user_id = 0
 N = 20
 most_relevant_movies = get_relevant_movies(user_id, N)

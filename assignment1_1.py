@@ -160,7 +160,9 @@ def get_relevant_movies(uid, N=1):
     return np.concatenate((most_relevant_ids, most_relevant_scores)).reshape((-1,2), order='F')
         
 
-root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+# CHANGE DIRECTORY PATH HERE TO THE ASSIGNMENT FILES 
+#root = '/home/tuomas/Python/DATA.ML.360/ml-latest-small/'
+root = '/Users/mueed/Documents/GitHub/recommender/ml-latest-small/'
 
 movies = pd.read_csv(root+'movies.csv', sep=',').values
 
@@ -187,6 +189,7 @@ filt = cases_matrix < 1 # This setting makes no effect
 sim_matrix[filt] = 0
 
 # Select a user from the dataset, and for this user, show the N most similar users
+# CHANGE THE USER_ID AND N VALUE HERE.
 user_id = 0
 N = 10
 sim_users = get_n_largest_idx(sim_matrix[user_id,:],N)
@@ -201,6 +204,7 @@ print()
 print_user_top_ratings(user_id, 10)
 
 # Show the N most relevant movies
+
 N = 20
 most_relevant_movies = get_relevant_movies(user_id, N)
 print()
