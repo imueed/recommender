@@ -73,8 +73,6 @@ def get_n_largest_idx(vec, n=1):
     idxs = (-vec).argsort()[:n]
     return idxs
 
-# user_unrated_movies_idx
-# unseen_movies_predictions
 N=20
 n_largest = get_n_largest_idx(unseen_movies_predictions,N)
 print('{} most relevant movies for user {}:'.format(N, user_id+1))

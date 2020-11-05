@@ -1,5 +1,4 @@
 """ This file consist the impelemtation of item based collaborative filtering. """
-#%%
 import numpy as np
 import pandas as pd
 from numpy.linalg import norm
