@@ -184,7 +184,7 @@ for uid in user_ids:
 sim_matrix, cases_matrix = calculate_sim_matrix()
 
 # OPTIONAL: Set sim_matrix values to 0 if similarity score
-# were calculated from too few samples.
+# was calculated from too few samples.
 filt = cases_matrix < 1 # This setting makes no effect
 sim_matrix[filt] = 0
 

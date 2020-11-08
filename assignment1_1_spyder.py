@@ -102,7 +102,7 @@ ratings = np.genfromtxt(root+'ratings.csv', delimiter=',')
 ratings = np.delete(ratings[1:], 3, axis=1)
 # Start user id's at 0 instead at 1
 ratings[:,0] -= 1
-
+#%%
 first_uid = int(ratings[0,0])
 last_uid = int(ratings[-1,0])
 user_ids = np.arange(first_uid, last_uid+1)
@@ -117,7 +117,7 @@ sim_matrix, cases_matrix = calculate_sim_matrix()
 
 #%%
 # OPTIONAL: Set sim_matrix values to 0 if similarity score
-# were calculated from too few samples..
+# was calculated from too few samples..
 filt = cases_matrix < 1 # This setting makes no effect
 sim_matrix[filt] = 0
 
@@ -143,7 +143,7 @@ for n in range(N):
 def get_movie_name(mid):
     rowidx = np.where(movies[:,0]==mid)[0]
     return movies[rowidx].ravel()[1]
-
+#%%
 def print_user_top_ratings(uid, N=1):
     seen_movie_data = get_userdata(uid, 1, 3)
     sorted_movie_data = seen_movie_data[np.argsort(seen_movie_data[:, 1])]
@@ -209,17 +209,25 @@ def get_relevant_movies(uid, N=1):
 
 # CHANGE THE USER_ID AND N VALUE HERE.
 user_id = 0
-N = 20
+N = 5
 most_relevant_movies = get_relevant_movies(user_id, N)
 
 print('List of {} most relevant movies for user {}:'.format(N, user_id+1))
 for mrm in most_relevant_movies:
     movie_id = int(mrm[0])
+    print(int(mrm[0]))
     movie_name = get_movie_name(movie_id)
     r = mrm[1]
     
     print('Pred. rating: {}'.format(r))
     print('(Id : {}), {}\n'.format(movie_id, movie_name))
 
-
-
+#%%
+f = open('1.txt','w+')
+unrated_movies = get_unseen_movies(0)
+#%%
+for ur in unrated_movies:
+    movie_id = ur
+    movie_name = get_movie_name(ur)
+    
+    f.write('(Id : {}), {}\n'.format(movie_id, movie_name))
